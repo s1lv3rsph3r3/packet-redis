@@ -18,6 +18,7 @@ jobs:
     name: Deployment
     steps:
       # Install Terraform on runner
+      - uses: actions/checkout@v2
       - name: Install Terraform
         env:
           TERRAFORM_VERSION: "0.15.4"
@@ -62,19 +63,16 @@ jobs:
 
 
       # Initialise terraform for creation of instance
-      - uses: actions/checkout@v2
       - name: Initialise terraform for creation of redis
         run: |
           terraform init
 
       # Validate terraform files and plan
-      - uses: actions/checkout@v2
       - name: Validate terraform files and plan
         run: |
           terraform validate
 
       # Plan terraform architecture creation
-      - uses: actions/checkout@v2
       - name: Terraform plan
         run: |
           terraform plan \
@@ -86,7 +84,6 @@ jobs:
           -var "uuid=${{ env.UUID }}"
 
       # Create the infrastructure using terraform
-      - uses: actions/checkout@v2
       - name: Apply and create infrastructure
         run: |
           echo "yes" | terraform apply \
