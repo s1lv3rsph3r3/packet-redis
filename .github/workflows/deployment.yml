@@ -78,6 +78,7 @@ jobs:
           terraform plan \
           -var "do_token=${{ secrets.DO_AUTH_TOKEN }}" \
           -var "pvt_key=/home/runner/.ssh/id_rsa" \
+          -var "pvt_key_file=/home/runner/.ssh/id_rsa" \
           -var "aws_region=${{ secrets.AWS_REGION }}" \
           -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY }}" \
           -var "aws_secret_key=${{ secrets.AWS_SECRET_KEY }}" \
@@ -88,6 +89,7 @@ jobs:
         run: |
           echo "yes" | terraform apply \
           -var "do_token=${{ secrets.DO_AUTH_TOKEN }}" \
+          -var "pvt_key_file=/home/runner/.ssh/id_rsa" \
           -var "pvt_key_file=/home/runner/.ssh/id_rsa" \
           -var "aws_region=${{ secrets.AWS_REGION }}" \
           -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY }}" \
