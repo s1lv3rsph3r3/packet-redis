@@ -1,5 +1,6 @@
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "packet-redis-terraform-state"
+  acl    = "private"
   # Enable versioning so we can see the full revision history of our
   # state files
   versioning {
