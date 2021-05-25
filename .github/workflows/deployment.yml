@@ -1,0 +1,106 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Deployment
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push only for the main branch
+  push:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    name: Deployment
+    steps:
+      # Configure AWS Credentials required for creating and accessing S3 bucket
+      - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+            aws-region: ${{ secrets.AWS_REGION }}
+
+      # Install Terraform on runner
+      - name: Install Terraform
+        env:
+          TERRAFORM_VERSION: "0.14.9"
+        run: |
+          tf_version=$TERRAFORM_VERSION
+          wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
+          unzip terraform_"$tf_version"_linux_amd64.zip
+          sudo mv terraform /usr/local/bin/
+
+      # Verify correct version is installed - purely for verbose output
+      - name: Verify Terraform version
+        run: terraform --version
+
+      # Setup ssh folder for credentials
+      - name: Create fresh .ssh folder
+        run: |
+          rm -rf /home/runner/.ssh
+          mkdir /home/runner/.ssh
+
+      # Create the public/private keys used for system deployment on remote machines
+      - name: Create pub/priv keys
+        run: |
+          echo "${{ secrets.DO_SSH_PRIV }}" > /home/runner/.ssh/id_rsa
+          echo "${{ secrets.DO_SSH_PUB }}" > /home/runner/.ssh/id_rsa.pub
+
+      # Set the permissions for the runner to access file for remote deployment
+      - name: Assign correct permissions to pub/priv keys
+        run: |
+          chmod 600 /home/runner/.ssh/id_rsa
+
+      # Set UUID for generating unique SSL certs with lets encrypt
+      # Sets a UUID variable in the GITHUB_ENV for later usage
+      - name: Set unique ID for generating unique SSL certs
+        run: |
+          echo "UUID=$(uuidgen)" >> $GITHUB_ENV
+
+# TODO: Implement blue/green deployment
+#      # Set a deployment variable for blue/green deployment
+#      - name: Set a deployment variable (blue/green)
+#        run: |
+#          echo "DEPLOYMENT_VALUE=green" >> $GITHUB_ENV
+
+
+      # Initialise terraform for creation of instance
+      - uses: actions/checkout@v2
+      - name: Initialise terraform for creation of redis
+        run: |
+          terraform init
+
+      # Validate terraform files and plan
+      - uses: actions/checkout@v2
+      - name: Validate terraform files and plan
+        run: |
+          terraform validate
+
+      # Plan terraform architecture creation
+      - uses: actions/checkout@v2
+      - name: Terraform plan
+        run: |
+          terraform plan \
+          -var "do_token=${{ secrets.DO_AUTH_TOKEN }}" \
+          -var "pvt_key=/home/runner/.ssh/id_rsa" \
+          -var "aws_region=${{ secrets.AWS_REGION }}" \
+          -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY }}" \
+          -var "aws_secret_key=${{ secrets.AWS_SECRET_KEY }}" \
+          -var "uuid=${{ env.UUID }}"
+
+      # Create the infrastructure using terraform
+      - uses: actions/checkout@v2
+      - name: Apply and create infrastructure
+        run: |
+          echo "yes" | terraform apply \
+          -var "do_token=${{ secrets.DO_AUTH_TOKEN }}" \
+          -var "pvt_key_file=/home/runner/.ssh/id_rsa" \
+          -var "aws_region=${{ secrets.AWS_REGION }}" \
+          -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY }}" \
+          -var "aws_secret_key=${{ secrets.AWS_SECRET_KEY }}" \
+          -var "uuid=${{ env.UUID }}"
