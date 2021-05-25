@@ -17,13 +17,13 @@ jobs:
     runs-on: ubuntu-20.04
     name: Deployment
     steps:
-      # Configure AWS Credentials required for creating and accessing S3 bucket
-      - name: Configure AWS credentials
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+#      # Configure AWS Credentials required for creating and accessing S3 bucket
+#      - name: Configure AWS credentials
+#      - uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+#          aws-region: ${{ secrets.AWS_REGION }}
 
       # Install Terraform on runner
       - name: Install Terraform
