@@ -35,12 +35,12 @@ data "digitalocean_ssh_key" "enigma-ssh" {
   name = "enigma-ssh"
 }
 
-//terraform {
-//  backend "s3" {
-//    bucket = "packet-redis-terraform-state"
-//    key = "default-infrastructure"
-//    region = "eu-west-1"
-//    profile = "default"
-//    encrypt = true
-//  }
-//}
+terraform {
+  backend "s3" {
+    bucket = "packet-redis-terraform-state"
+    key = "default-infrastructure"
+    region = "eu-west-1"
+    profile = "default"
+    encrypt = true
+  }
+}
