@@ -20,7 +20,7 @@ jobs:
       # Install Terraform on runner
       - name: Install Terraform
         env:
-          TERRAFORM_VERSION: "0.14.9"
+          TERRAFORM_VERSION: "0.15.4"
         run: |
           tf_version=$TERRAFORM_VERSION
           wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
