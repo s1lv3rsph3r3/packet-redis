@@ -20,6 +20,7 @@ variable "aws_access_key" {}
 variable "aws_secret_key" {}
 
 variable "uuid" {}
+variable "server_count" {}
 
 provider "digitalocean" {
   token = var.do_token
