@@ -5,9 +5,12 @@
 
 - name: Ensure Redis is started
   service: name=redis-server state=started enabled=yes
-  sudo: true
 
 - name: Ensure Redis Configuration
-  template: src=redis.conf.j2 dest=/etc/redis/redis.conf owner={{ remote_user }} group=www-data mode=0644
-  sudo: true
+  template:
+    src: "redis.conf.j2"
+    dest: "/etc/redis/redis.conf"
+    owner: "{{ remote_user }}"
+    group: "www-data"
+    mode: "0644"
   notify: Redis Restart
