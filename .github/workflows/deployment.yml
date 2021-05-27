@@ -88,7 +88,7 @@ jobs:
         run: |
           terraform plan \
           -var "do_token=${{ secrets.DO_AUTH_TOKEN }}" \
-          -var "pvt_key=/home/runner/.ssh/id_rsa" \
+          -var "pvt_key=${{ secrets.DO_SSH_PRIV }}" \
           -var "pvt_key_file=/home/runner/.ssh/id_rsa" \
           -var "aws_region=${{ secrets.AWS_REGION }}" \
           -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY }}" \
