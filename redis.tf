@@ -14,6 +14,14 @@ resource "digitalocean_droplet" "green" {
     private_key = var.pvt_key
     timeout = "2m"
   }
+  provisioner "remote-exec" {
+    inline = [
+      "export PATH=$PATH:/usr/bin",
+      # install nginx
+      "sudo apt-get update",
+      "sudo apt-get -y install nginx"
+    ]
+  }
   provisioner "local-exec" {
     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u root -i '${self.ipv4_address},' --private-key ${var.pvt_key_file} ./playbooks/server-setup.yml"
   }
