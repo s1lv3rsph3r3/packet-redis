@@ -61,6 +61,11 @@ jobs:
         run: |
           echo "UUID=$(uuidgen)" >> $GITHUB_ENV
 
+      # Just for testing - easily teardown existing infra to rebuild
+      - name: Set the number of servers for building
+        run: |
+          echo "SERVER_COUNT=1" >> $GITHUB_ENV
+
 # TODO: Implement blue/green deployment
 #      # Set a deployment variable for blue/green deployment
 #      - name: Set a deployment variable (blue/green)
@@ -88,9 +93,18 @@ jobs:
           -var "aws_region=${{ secrets.AWS_REGION }}" \
           -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY }}" \
           -var "aws_secret_key=${{ secrets.AWS_SECRET_KEY }}" \
-          -var "uuid=${{ env.UUID }}"
+          -var "uuid=${{ env.UUID }}" \
+          -var "server_count=${{ env.SERVER_COUNT }}"
 
       # Create the infrastructure using terraform
       - name: Apply and create infrastructure
         run: |
-          echo "yes" | terraform apply -var "do_token=${{ secrets.DO_AUTH_TOKEN }}" -var "pvt_key_file=/home/runner/.ssh/id_rsa" -var "pvt_key=${{ secrets.DO_SSH_PRIV }}" -var "aws_region=${{ secrets.AWS_REGION }}" -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY }}" -var "aws_secret_key=${{ secrets.AWS_SECRET_KEY }}" -var "uuid=${{ env.UUID }}"
+          echo "yes" | terraform apply \
+          -var "do_token=${{ secrets.DO_AUTH_TOKEN }}" \
+          -var "pvt_key_file=/home/runner/.ssh/id_rsa" \
+          -var "pvt_key=${{ secrets.DO_SSH_PRIV }}" \
+          -var "aws_region=${{ secrets.AWS_REGION }}" \
+          -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY }}" \
+          -var "aws_secret_key=${{ secrets.AWS_SECRET_KEY }}" \
+          -var "uuid=${{ env.UUID }}" \
+          -var "server_count=${{ env.SERVER_COUNT }}"
