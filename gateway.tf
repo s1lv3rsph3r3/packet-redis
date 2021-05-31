@@ -1,7 +1,7 @@
 resource "digitalocean_droplet" "gateway_green" {
   count = var.server_count
   image = "ubuntu-20-04-x64"
-  name = "redis-green-version-1.0-${count.index}"
+  name = "gateway-green-version-1.0-${count.index}"
   region = "fra1"
   size = "s-1vcpu-1gb"
   private_networking = true
