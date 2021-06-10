@@ -1,4 +1,4 @@
-resource "digitalocean_droplet" "green" {
+resource "digitalocean_droplet" "redis_green" {
   count = var.server_count
   image = "ubuntu-20-04-x64"
   name = "redis-green-version-1.0-${count.index}"
