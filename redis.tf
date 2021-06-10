@@ -24,6 +24,6 @@ resource "digitalocean_droplet" "redis_green" {
     ]
   }
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u root -i '${self.ipv4_address},' --private-key ${var.pvt_key_file} ./playbooks/server-setup.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u root -i '${self.ipv4_address},' --private-key ${var.pvt_key_file} -e \"do_instance_private_ip=${self.ipv4_address_private}\"  ./playbooks/server-setup.yml"
   }
 }
