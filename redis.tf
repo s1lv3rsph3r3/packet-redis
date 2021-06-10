@@ -7,7 +7,7 @@ resource "digitalocean_droplet" "redis_green" {
   private_networking = true
   tags = ["redis_v1_0", "green_v1_0"]
   ssh_keys = [29902027]
-  vpc_uuid = digitalocean_vpc.redis_example[count.index].id
+  vpc_uuid = digitalocean_vpc.redis_example.id
   connection {
     host = self.ipv4_address
     user = "root"
