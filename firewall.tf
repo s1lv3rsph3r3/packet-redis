@@ -1,7 +1,7 @@
 resource "digitalocean_firewall" "packet_redis" {
   name = "only-internal-traffic-please"
 
-  droplet_ids = [digitalocean_droplet.redis_green[count.index].id]
+  droplet_ids = [digitalocean_droplet.redis_green.id]
 
   inbound_rule {
     protocol         = "tcp"
