@@ -65,7 +65,7 @@
     direction: incoming
 
 - name: UFW - Allow all traffic for redis from VPC
-  run: "ufw allow from {{ do_vpc_ip_range }} to any port 6379"
+  shell: "ufw allow from {{ do_vpc_ip_range }} to any port 6379"
 
 - name: UFW - Reload UFW
-  run: ufw reload
+  shell: ufw reload
