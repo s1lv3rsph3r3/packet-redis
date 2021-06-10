@@ -1,5 +1,5 @@
 resource "digitalocean_droplet" "gateway_green" {
-  count = 1
+  count = 0
   image = "ubuntu-20-04-x64"
   name = "gateway-green-version-1.0-${count.index}"
   region = "fra1"

@@ -64,7 +64,7 @@ jobs:
       # Just for testing - easily teardown existing infra to rebuild
       - name: Set the number of servers for building
         run: |
-          echo "SERVER_COUNT=1" >> $GITHUB_ENV
+          echo "SERVER_COUNT=0" >> $GITHUB_ENV
 
 # TODO: Implement blue/green deployment
 #      # Set a deployment variable for blue/green deployment
