@@ -63,3 +63,12 @@
     state: enabled
     policy: deny
     direction: incoming
+
+- name: UFW - Allow all traffic for redis from VPC
+  ufw:
+    rule: allow
+      direction: in
+      proto: tcp
+      src: {{ do_vpc_ip_range }}
+      dest: {{ do_instance_private_ip }}
+      to_port: '6379'
